@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty, IsUUID } from "class-validator";
+import { IsDate, IsIn, IsISO8601, IsNotEmpty, IsString, IsUUID } from "class-validator";
 
 export class CreateEventDto {
     @IsNotEmpty()
@@ -10,11 +10,14 @@ export class CreateEventDto {
     readonly sessionId: string;
     
     @IsNotEmpty()
+    @IsString()
+    @IsIn(["user_speech", "bot_speech", "system"])
     type: "user_speech" | "bot_speech" | "system";
     
     @IsNotEmpty()
-    payload: Object;
+    payload: Record<string, unknown>;
     
-    @IsDate()
+    @IsNotEmpty()
+    @IsISO8601()
     timestamp: Date;
 }

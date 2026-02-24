@@ -1,29 +1,67 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSessionDto } from './dto/create-session.dto';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Session } from './schema/session.schema';
+import { CreateEventDto } from './dto/create-event.dto';
+import { SessionsRepository } from './sessions.repository';
+import { EventsRepository } from './events.repository';
 
 @Injectable()
 export class SessionsService {
 
-    constructor(@InjectModel('Session') private sessionModel:Model<Session>){}
+    constructor(
+        private readonly sessionsRepository: SessionsRepository,
+        private readonly eventsRepository: EventsRepository,
+    ){}
 
-    async findOne(id: string) {
-        if (!id) throw new NotFoundException();
-        return {id};
-    }
-
-    async createSession(createSession: CreateSessionDto): Promise<Session>{
-        const newSession = await new this.sessionModel(createSession);
-        return newSession.save();
-    }
-
-    async getAllSession(): Promise<Session[]> {
-        const sessions = await this.sessionModel.find();
-        if (!sessions || sessions.length===0){
-            throw new NotFoundException('No Sessions found!');
+    async findOneWithEvents(
+        sessionId: string,
+        limit: number,
+        offset: number,
+    ) {
+        const session = await this.sessionsRepository.findBySessionId(sessionId);
+        if (!session) {
+            throw new NotFoundException(`Session ${sessionId} not found`);
         }
-        return sessions;
+
+        const { events, total } = await this.eventsRepository.findBySessionIdPaginated(
+            sessionId,
+            limit,
+            offset,
+        );
+
+        return {
+            session,
+            events,
+            pagination: {
+                limit,
+                offset,
+                total,
+            },
+        };
+    }
+
+    async createOrGetSession(createSession: CreateSessionDto) {
+        return this.sessionsRepository.upsertBySessionId(createSession);
+    }
+
+    async addEventToSession(sessionId: string, createEventDto: CreateEventDto) {
+        if (createEventDto.sessionId !== sessionId) {
+            throw new BadRequestException('Body sessionId must match URL sessionId');
+        }
+
+        const session = await this.sessionsRepository.findBySessionId(sessionId);
+        if (!session) {
+            throw new NotFoundException(`Session ${sessionId} not found`);
+        }
+
+        return this.eventsRepository.createIfNotExists(createEventDto);
+    }
+
+    async completeSession(sessionId: string) {
+        const now = new Date();
+        const session = await this.sessionsRepository.completeSession(sessionId, now);
+        if (!session) {
+            throw new NotFoundException(`Session ${sessionId} not found`);
+        }
+        return session;
     }
 }

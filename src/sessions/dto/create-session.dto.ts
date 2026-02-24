@@ -1,4 +1,5 @@
-import { IsDate, IsNotEmpty, IsUUID } from "class-validator";
+import { Type } from "class-transformer";
+import { IsDate, IsIn, IsISO8601, IsNotEmpty, IsOptional, IsString, IsUUID } from "class-validator";
 
 export class CreateSessionDto {
     @IsNotEmpty()
@@ -6,17 +7,22 @@ export class CreateSessionDto {
     readonly sessionId: string;
     
     @IsNotEmpty()
-    status: "initaited" | "active" | "completed" | "failed";
+    @IsString()
+    @IsIn(["initiated", "active", "completed", "failed"])
+    status: "initiated" | "active" | "completed" | "failed";
     
     @IsNotEmpty()
+    @IsString()
     language: string;
     
     @IsNotEmpty()
-    @IsDate()
+    @IsISO8601()
     startedAt: Date;
     
-    @IsDate()
-    endedAt: Date | null;
+    @IsOptional()
+    @IsISO8601()
+    endedAt?: Date;
     
-    metadata: Object;
+    @IsOptional()
+    metadata?: Record<string, unknown>;
 }
