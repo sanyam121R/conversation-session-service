@@ -1,4 +1,4 @@
-### Conversation Session Service
+# <div style="display:flex; flex-direction:row; gap:18px; align-items:center;"><img src="https://www.svgrepo.com/show/520119/voice.svg" style="height:64px;"/> Conversation Session Service </div>
 
 A small NestJS + MongoDB service powering conversation sessions and their events for a Voice AI platform.
 
