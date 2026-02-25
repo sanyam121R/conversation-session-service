@@ -1,4 +1,4 @@
-# <div style="display:flex; flex-direction:row; gap:18px; align-items:center;"><img src="https://www.svgrepo.com/show/520119/voice.svg" style="height:64px;"/> Conversation Session Service </div>
+# <div style="display:flex; flex-direction:row; gap:18px; align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="64px" height="64px" viewBox="0 0 48 48" id="Layer_2" data-name="Layer 2" fill="#c2c2c2" stroke="#c2c2c2"><g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/><g id="SVGRepo_iconCarrier"><defs><style>.cls-1{fill:none;stroke:#c2c2c2;stroke-linecap:round;stroke-linejoin:round;}</style></defs><path class="cls-1" d="M24,45.5A21.5,21.5,0,1,1,45.5,24,21.51,21.51,0,0,1,24,45.5Z"/><path class="cls-1" d="M4.75,14.4A7.09,7.09,0,0,1,9,13.09c8.44,0,7.91,22,18.09,22,8.82,0,8.31-18.09,16.63-19.77"/><path class="cls-1" d="M5.23,13.51c6.52,3,6.84,21.58,16.18,21.58S29.66,15.2,39.33,15.2a6.87,6.87,0,0,1,5.17,2.3"/></g></svg> Conversation Session Service </div>
 
 A small NestJS + MongoDB service powering conversation sessions and their events for a Voice AI platform.
 
