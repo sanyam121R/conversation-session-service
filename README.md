@@ -107,7 +107,22 @@ Base URL: `http://localhost:3000`
 
 Idempotent under repeated calls for the same `sessionId`.
 
-#### 2. Add Event to Session
+
+#### 2. Create or Upsert Session
+
+- **Endpoint**: `GET /sessions`
+- **Behavior**:
+  - Returns sessions.
+  - Returns sessions ordered by `timestamp` ascending.
+  - Supports simple limit/offset pagination.
+
+- **Response**: `200 Ok`
+
+```json
+
+```
+
+#### 3. Add Event to Session
 
 - **Endpoint**: `POST /sessions/:sessionId/events`
 - **Behavior**:
@@ -147,7 +162,7 @@ Idempotent under repeated calls for the same `sessionId`.
 }
 ```
 
-#### 3. Get Session with Events (Paginated)
+#### 4. Get Session with Events (Paginated)
 
 - **Endpoint**: `GET /sessions/:sessionId`
 - **Query params**:
@@ -194,7 +209,7 @@ Idempotent under repeated calls for the same `sessionId`.
 }
 ```
 
-#### 4. Complete Session
+#### 5. Complete Session
 
 - **Endpoint**: `POST /sessions/:sessionId/complete`
 - **Behavior**:

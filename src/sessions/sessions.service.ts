@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    InternalServerErrorException,
+    NotFoundException,
+} from '@nestjs/common';
 import { CreateSessionDto } from './dto/create-session.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { SessionsRepository } from './sessions.repository';
@@ -6,17 +11,21 @@ import { EventsRepository } from './events.repository';
 
 @Injectable()
 export class SessionsService {
-
     constructor(
         private readonly sessionsRepository: SessionsRepository,
         private readonly eventsRepository: EventsRepository,
-    ){}
+    ) { }
 
-    async findOneWithEvents(
-        sessionId: string,
-        limit: number,
-        offset: number,
-    ) {
+    async findAllSessions(limit: number, offset: number) {
+        const { sessions, total } = await this.sessionsRepository.findAll(limit, offset);
+
+        return {
+            pagination: { limit, offset, total },
+            sessions,
+        };
+    }
+
+    async findOneWithEvents(sessionId: string, limit: number, offset: number) {
         const session = await this.sessionsRepository.findBySessionId(sessionId);
         if (!session) {
             throw new NotFoundException(`Session ${sessionId} not found`);
@@ -31,11 +40,7 @@ export class SessionsService {
         return {
             session,
             events,
-            pagination: {
-                limit,
-                offset,
-                total,
-            },
+            pagination: { limit, offset, total, },
         };
     }
 

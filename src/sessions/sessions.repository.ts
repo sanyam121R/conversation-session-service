@@ -36,6 +36,22 @@ export class SessionsRepository {
     return this.sessionModel.findOne({ sessionId }).exec();
   }
 
+  async findAll(
+    limit: number,
+    offset: number,
+  ): Promise<{ sessions: SessionDocument[], total: number }> {
+    const [sessions, total] = await Promise.all([
+      this.sessionModel
+        .find()
+        .sort({ startedAt: 1 })
+        .skip(offset)
+        .limit(limit)
+        .exec(),
+      this.sessionModel.countDocuments().exec(),
+    ]);
+    return { sessions, total }
+  }
+
   async completeSession(sessionId: string, endedAt: Date): Promise<SessionDocument | null> {
     return this.sessionModel
       .findOneAndUpdate(
@@ -48,7 +64,7 @@ export class SessionsRepository {
         },
         {
           returnDocument: 'after',
-          upsert: true,
+          upsert: false,
         },
       )
       .exec();
