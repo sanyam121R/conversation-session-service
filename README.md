@@ -56,13 +56,15 @@ Run in production mode (after `npm run build`):
 npm run start:prod
 ```
 
-The service listens on `http://localhost:3000` by default (configurable via `PORT` env var).
+The service listens on `http://localhost:3000` by default.
 
 ---
 
 ### API Overview
 
 Base URL: `http://localhost:3000`
+Before making any api call you need to get UUID's for sessionId and eventId, I used online UUID generators.
+Here's the [uuid-generator link](https://fusionauth.io/dev-tools/uuid-generator)
 
 #### 1. Create or Upsert Session
 
