@@ -110,7 +110,7 @@ Here's the [uuid-generator link](https://fusionauth.io/dev-tools/uuid-generator)
 Idempotent under repeated calls for the same `sessionId`.
 
 
-#### 2. Create or Upsert Session
+#### 2. Get Sessions
 
 - **Endpoint**: `GET /sessions`
 - **Behavior**:
@@ -121,7 +121,51 @@ Idempotent under repeated calls for the same `sessionId`.
 - **Response**: `200 Ok`
 
 ```json
-
+{
+    "pagination": {
+        "limit": 50,
+        "offset": 0,
+        "total": 3
+    },
+    "sessions": [
+        {
+            "_id": "699f34431ae5a3dc40776831",
+            "sessionId": "c2046bef-aab2-4629-b73d-acd02fb2e7ac",
+            "__v": 0,
+            "endedAt": "2026-02-25T17:47:56.347Z",
+            "language": "en",
+            "metadata": {
+                "any": "json"
+            },
+            "startedAt": "2024-01-01T00:00:00.000Z",
+            "status": "completed"
+        },
+        {
+            "_id": "699e0a80d70db9de8d536a17",
+            "sessionId": "551db9e2-7775-40a4-9c3f-20610f9811e3",
+            "__v": 0,
+            "endedAt": null,
+            "language": "en",
+            "metadata": {
+                "any": "json"
+            },
+            "startedAt": "2025-01-01T00:00:00.000Z",
+            "status": "active"
+        },
+        {
+            "_id": "699e0b60d70db9de8d536a19",
+            "sessionId": "44af1a89-978d-48fc-b4b7-95820f92f201",
+            "__v": 0,
+            "endedAt": "2026-02-25T17:43:56.402Z",
+            "language": "en",
+            "metadata": {
+                "any": "json"
+            },
+            "startedAt": "2025-02-01T00:00:00.000Z",
+            "status": "completed"
+        }
+    ]
+}
 ```
 
 #### 3. Add Event to Session
