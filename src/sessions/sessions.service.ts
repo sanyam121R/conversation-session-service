@@ -58,7 +58,8 @@ export class SessionsService {
             throw new NotFoundException(`Session ${sessionId} not found`);
         }
 
-        return this.eventsRepository.createIfNotExists(createEventDto);
+        const {event, exists} = await this.eventsRepository.createIfNotExists(createEventDto);
+        return {event, exists};
     }
 
     async completeSession(sessionId: string) {

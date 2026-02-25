@@ -55,6 +55,15 @@ export class DatabaseExceptionFilter implements ExceptionFilter {
         }
 
         if (exception instanceof MongoServerError) {
+            if (exception.code === 11000) {
+                // Duplicate key - this is EXPECTED behavior for idempotency!
+                return {
+                    status: HttpStatus.CONFLICT, // 409
+                    message: 'Event already exists',
+                    error: 'Conflict',
+                };
+            }
+
             return {
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
                 message: 'A database error occurred. Please try again later.',

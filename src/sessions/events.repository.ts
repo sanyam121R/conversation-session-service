@@ -9,30 +9,31 @@ export class EventsRepository {
   constructor(
     @InjectModel(Event.name)
     private readonly eventModel: Model<EventDocument>,
-  ) {}
+  ) { }
 
-  async createIfNotExists(dto: CreateEventDto): Promise<EventDocument> {
-    const filter = {
-      sessionId: dto.sessionId,
-      eventId: dto.eventId,
-    };
-
-    const update = {
-      $setOnInsert: {
+  async createIfNotExists(dto: CreateEventDto): Promise<{ event: EventDocument, exists: boolean }> {
+    try {
+      // Attempt to create
+      const event = await this.eventModel.create({
         sessionId: dto.sessionId,
         eventId: dto.eventId,
         type: dto.type,
         payload: dto.payload,
         timestamp: dto.timestamp,
-      },
-    };
+      });
 
-    const result = await this.eventModel.findOneAndUpdate(filter, update, {
-      returnDocument: 'after',
-      upsert: true,
-    });
+      return { event, exists: false };
+    } catch (error: any) {
+      if (error.code === 11000) {
+        const existingEvent = await this.eventModel.findOne({
+          sessionId: dto.sessionId,
+          eventId: dto.eventId,
+        });
 
-    return result;
+        return { event: existingEvent as EventDocument, exists: true };
+      }
+      throw error;
+    }
   }
 
   async findBySessionIdPaginated(

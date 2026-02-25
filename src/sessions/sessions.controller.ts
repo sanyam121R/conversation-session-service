@@ -46,9 +46,19 @@ export class SessionsController {
         @Res() response,
         @Body() createEventDto: CreateEventDto,
     ) {
-        const event = await this.sessionsService.addEventToSession(sessionId, createEventDto);
+        const { event, exists } = await this.sessionsService.addEventToSession(
+            sessionId,
+            createEventDto
+        );
+
+        if (exists)
+            return response.status(HttpStatus.OK).json({
+                message: 'Event Already Successfully',
+                event,
+            });
+
         return response.status(HttpStatus.CREATED).json({
-            message: 'Event added successfully',
+            message: 'Event Added Successfully',
             event,
         });
     }
